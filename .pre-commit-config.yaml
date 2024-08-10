@@ -18,11 +18,6 @@ repos:
       language_version: python3
       stages:
         - commit
-    - id: dvc-pre-push
-      additional_dependencies: ['.[gs]']
-      language_version: python3
-      stages:
-        - push
     - always_run: true
       id: dvc-post-checkout
       language_version: python3
