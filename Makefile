@@ -6,7 +6,7 @@ PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 POETRY := $(shell command -v poetry 2> /dev/null)
 POETRY_ENV_DIR := $(shell $(POETRY) env info -p)
 POETRY_RUN := $(POETRY) run
-PROJECT_NAME = power-supply-dashboard-data-processor
+PROJECT_NAME = power-supply-dashboard-analysis
 PYTHON_VERSION = 3.12
 SHELL := /bin/bash
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# power-supply-dashboard-data-processor documentation build configuration file, created by
+# power-supply-dashboard-analysis documentation build configuration file, created by
 # sphinx-quickstart.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -78,7 +78,7 @@ source_suffix = {
 master_doc = "index"
 
 # General information about the project.
-project = "power-supply-dashboard-data-processor"
+project = "power-supply-dashboard-analysis"
 copyright = "2023, Software x Climate project team"
 
 # The version info for the project you're documenting, acts as replacement for
@@ -207,7 +207,7 @@ html_static_path = ["_static"]
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "power-supply-dashboard-data-processordoc"
+htmlhelp_basename = "power-supply-dashboard-analysisdoc"
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -226,8 +226,8 @@ latex_elements = {
 latex_documents = [
     (
         "index",
-        "power-supply-dashboard-data-processor.tex",
-        "power-supply-dashboard-data-processor Documentation",
+        "power-supply-dashboard-analysis.tex",
+        "power-supply-dashboard-analysis Documentation",
         "Software x Climate project team",
         "manual",
     ),
@@ -261,8 +261,8 @@ latex_documents = [
 man_pages = [
     (
         "index",
-        "power-supply-dashboard-data-processor",
-        "power-supply-dashboard-data-processor Documentation",
+        "power-supply-dashboard-analysis",
+        "power-supply-dashboard-analysis Documentation",
         ["Software x Climate project team"],
         1,
     )
@@ -280,10 +280,10 @@ man_pages = [
 texinfo_documents = [
     (
         "index",
-        "power-supply-dashboard-data-processor",
-        "power-supply-dashboard-data-processor Documentation",
+        "power-supply-dashboard-analysis",
+        "power-supply-dashboard-analysis Documentation",
         "Software x Climate project team",
-        "power-supply-dashboard-data-processor",
+        "power-supply-dashboard-analysis",
         "Personalized dashboard providing location-based insight into carbon emissions intensity of the grid",
         "Miscellaneous",
     ),

@@ -1,4 +1,4 @@
-# power-supply-dashboard-data-processor
+# power-supply-dashboard-analysis
 
 Personalized dashboard providing location-based insight into carbon emissions intensity of the grid
 
@@ -22,3 +22,7 @@ Then run the streamlit app locally using:
 $ poetry install
 $ poetry run streamlit run power_dashboard/app.py
 ```
+
+## Project Organization
+
+Visit the [docs folder](https://github.com/ahasha/power-supply-dashboard-analysis/blob/main/docs/user-guide.md) for more info on this project's structure and how to use [DVC](https://dvc.org).
