@@ -43,6 +43,9 @@ nosetests.xml
 coverage.xml
 *.cover
 
+# Ruff
+.ruff_cache
+
 # Translations
 *.mo
 *.pot

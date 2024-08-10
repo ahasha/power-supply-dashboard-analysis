@@ -1,10 +1,5 @@
 # User Guide
 
-## Project Structure Roadmap
-
-:::{include} project-organization.md
-:::
-
 ## DVC How To...
 
 Of the tools incorporated in this project template, DVC is likely the least familiar to the typical Data Scientist and has
@@ -14,14 +9,35 @@ well worth reviewing in greater detail.
 Below are a few of the most common DVC commands you will use frequently during model development, discussed in the order that they're typically used in a standard workflow. Consult the [DVC command reference](https://dvc.org/doc/command-reference) for
 a full listing of commands and greater detail.
 
+Below is a summary of the most commonly used commands roughly in the order you will use them when spinning up a pre-existing project with pre-tracked data.  To keep things simple, I avoid discussing command arguments and flags and instead just give a typical example.  You can always add `--help` to see available options or consult the [command reference](https://dvc.org/doc/command-reference) for more detail.
+
+### Pull project data from remote storage: `dvc pull`
+
+Once you have cloned the project code from GitHub, you can fetch the tracked data into the workspace by running `dvc pull`.
+
+:::{tip}
+Depending on your environment, you'll likely need to authorize your access to GCP by running `gcloud auth application-default login` first.
+:::
+
 ### Check whether code and data are aligned: `dvc status`
 
 [`dvc status`](https://dvc.org/doc/command-reference/status) shows changes in the project pipelines, as well as file mismatches either between the cache and workspace, or between the cache and remote storage.  Use it to diagnose whether data and code are aligned and see which stages of the pipeline will run if `dvc repro` is called.
 
 
-### Align code and (previously-calculated) data: `dvc checkout`
+### Switch branches and get aligned data: `git switch <branch>; dvc checkout`
 
-[`dvc checkout`](https://dvc.org/doc/command-reference/checkout) updates DVC-tracked files and directories in the workspace based on current `dvc.lock` and `.dvc` files.  This command is usually needed after git checkout, git clone, or any other operation that changes the current dvc.lock or .dvc files in the project (though the installed git hooks frequently automate this step). It restores the versions of all DVC-tracked data files and directories referenced in DVC metadata files from the cache to the workspace.
+To update your workspace to a different branch and keep the data in sync with DVC, you first use a git command to change the code version, then run `dvc checkout` to load the associated data into the workspace.
+
+[`dvc checkout`](https://dvc.org/doc/command-reference/checkout) updates DVC-tracked files and directories in the workspace based on current `dvc.lock` and `.dvc` files.  This command is usually needed after git checkout, git clone, or any other operation that changes the current dvc.lock or .dvc files in the project (though the installed git hooks frequently automate this step). It restores the
+versions of all DVC-tracked data files and directories referenced in DVC metadata files from the cache to the workspace.
+
+:::{tip}
+If you have installed the DVC post-checkout hooks, `dvc checkout` will run automatically after `git checkout`.
+:::
+
+:::{hint}
+If you get warnings that data is missing from the cache, you may need to `dvc pull` from a remote first.
+:::
 
 ### Define the pipeline DAG
 
@@ -87,6 +103,19 @@ A disadvantage is that some advanced features such as templating are not availab
 
 [`dvc repro`](https://dvc.org/doc/command-reference/repro) reproduces complete or partial pipelines by running their stage commands as needed in the correct order. This is similar to `make` in software build automation, in that DVC captures "build requirements" (stage dependencies) and determines which stages need to run based on whether there outputs are "up to date".  Unlike `make`, it caches the pipeline's outputs along the way.
 
+Alternatively, you can use a [DVC experiment tracking workflow](dvc-experiments/).
+
+:::{admonition} Why did I get *permission denied* when I try to modify a pipeline output!?!?
+:clas: caution
+
+This is expected when you use the default configuration settings of this template! DVC moves all tracked data to the project's cache.  However, the versions of the tracked files that match the current code are also needed in the workspace, so a subset of the cached files are placed in the working directory (using `dvc checkout`).  Does this mean that some files will be duplicated between the workspace and the cache?  That would not be efficient, especially with large files!
+
+In order to have the files present in both directories without duplication, this template configures DVC to create file [hardlinks](https://www.redhat.com/sysadmin/linking-linux-explaiend) to the cached data in the workspace.
+A hardlink is merely a second filesystem pointer to the same underlying data blocks on the hard disk, so modifying these files in place would ocrrupt the DVC cache.  To prevent this, DVC takes over managment of the tracked files in the workspace and cache and sets them all to read-only.  **They should only be modified with DVC commands such as `dvc repro`.**  Manually tracked files (not generated by the pipeline, but added with `dvc add`) can be modified after running `dvc unprotect` on it.
+
+Visit [Large Dataset Optimization](https://dvc.org/doc/user-guide/data-management/large-dataset-optimization) for an in-depth discussion of all configurable linking options.
+:::
+
 ### Define pipeline parameters
 
 Parameters are any values used inside your code to tune analytical results. For example, a random forest classifier may require a maximum depth value. Machine learning experimentation often involves defining and searching hyperparameter spaces to improve the resulting model metrics.
@@ -129,7 +158,7 @@ Visit the [dvc documentation](https://dvc.org/doc/user-guide/experiment-manageme
 
 [`dvc pull`](https://dvc.org/doc/command-reference/pull) download tracked files or directories from remote storage based on the current `dvc.yaml` and `.dvc` files, and make them visible in the workspace.
 
-### Manually track externally-created files: `dvc add`
+### Manually track a file: `dvc add`
 
 [`dvc add`](https://dvc.org/doc/command-reference/add) tells DVC to track versions of data that is not created by the DVC pipeline in `dvc.yaml`. DVC allows tracking of such datasets using .dvc files as lightweight pointers to your data in the cache. The dvc add command is used to track and update your data by creating or updating .dvc files, similar to the usage of `git add` to add source code updates to git.
 
@@ -326,3 +355,9 @@ To build and share the documentation website:
 * `make docs` builds the project documentation to `docs/_build/html`.
 * `make start-doc-server` runs an http server for the documentation website.
 * `make stop-doc-server` stops a running http server.
+
+
+## Project Structure Roadmap
+
+:::{include} project-organization.md
+:::

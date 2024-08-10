@@ -2,5 +2,7 @@
     autostage = true
     analytics = false
     remote = origin
+[cache]
+    type = "reflink,hardlink,symlink"
 ['remote "origin"']
     url = gs://hasha-ds-portfolio-projects/power_dashboard/
