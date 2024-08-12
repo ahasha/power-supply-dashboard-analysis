@@ -46,6 +46,15 @@ def get_power_breakdown(lat, lng, current_hour):
     )
 
 
+# Cut down gmaps API costs by cacheing results.
+@st.cache_data
+def geocode_address(address: str) -> dict:
+    geocode_result = gmaps.geocode(address)
+    location = geocode_result[0]["geometry"]["location"]
+    location["formatted_address"] = geocode_result[0]["formatted_address"]
+    return location
+
+
 zones = get_zones()
 
 with st.spinner("Updating..."):
@@ -56,8 +65,7 @@ with st.spinner("Updating..."):
     if address == "":
         st.stop()
 
-    geocode_result = gmaps.geocode(address)
-    location = geocode_result[0]["geometry"]["location"]
+    location = geocode_address(address)
 
     # Get the carbon intensity data
     result = get_carbon_intensity(location["lat"], location["lng"], now)
@@ -80,7 +88,7 @@ with st.spinner("Updating..."):
 
     with st.sidebar:
         st.markdown("### Displaying Results for:")
-        st.markdown(f"**Location**: {geocode_result[0]['formatted_address']}")
+        st.markdown(f"**Location**: {location['formatted_address']}")
         st.markdown(f"**Grid Zone**: {zones[result["zone"]]['zoneName']}")
         st.markdown(f"**Timezone**: {timezone_str}")
         st.markdown(f"**Local Time**: {latest_time}")
@@ -105,11 +113,28 @@ with st.spinner("Updating..."):
     # Display production reakdown
     cols = st.columns(len(power_breakdown_result["powerConsumptionBreakdown"].keys()))
 
-    for i, (source, value) in enumerate(
-        power_breakdown_result["powerConsumptionBreakdown"].items()
-    ):
+    # Sort power consumption breakdown in decreasing order and display the top 3 sources
+    sorted_sources = sorted(
+        power_breakdown_result["powerConsumptionBreakdown"].items(),
+        key=lambda item: item[1],
+        reverse=True,
+    )
+
+    st.subheader("Top 3 power generation sources")
+    cols = st.columns((1, 1, 1))
+    for i, (source, value) in enumerate(sorted_sources[:3]):
         cols[i].metric(label=source, value=f"{value} MW")
 
+    with st.expander("Show more sources"):
+        cols = st.columns(
+            len(power_breakdown_result["powerConsumptionBreakdown"].keys())
+        )
+        for i, (source, value) in enumerate(sorted_sources[3:]):
+            st.metric(label=source, value=f"{value} MW")
+
+    st.subheader(
+        f"Carbon Intensity over previous 24 hrs in {zones[result['zone']]['zoneName']}"
+    )
     fig, ax = plt.subplots(figsize=(10, 3))
 
     ax.plot(
@@ -124,10 +149,10 @@ with st.spinner("Updating..."):
         linestyle="--",
     )
     ax.legend()
-    ax.set_title(
-        f"Carbon Intensity over previous 24 hrs in {zones[result['zone']]['zoneName']}"
-    )
     ax.set_ylabel("gCO2e/kWh")
     ax.set_xlabel("Time")
 
     st.pyplot(fig)
+    st.caption(
+        "Data from [electricityMap API](https://api-portal.electricitymaps.com/)"
+    )
