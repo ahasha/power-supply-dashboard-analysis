@@ -33,7 +33,6 @@ export PATH=/Library/Frameworks/Python.framework/Versions/3.12/bin:$PATH
 
 export PYENV_ROOT=$HOME/.pyenv
 command -v pyenv >/dev/null || export PATH=$PYENV_ROOT/bin:$PATH
-#export PATH=$PYENV_ROOT/bin:$PATH
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 ```
