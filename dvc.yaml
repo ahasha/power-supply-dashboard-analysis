@@ -3,8 +3,8 @@ stages:
     cmd:  curl 'https://api.electricitymap.org/v3/zones' > data/raw/electricitymaps_zones.json
     outs:
     - data/raw/electricitymaps_zones.json
-  # download_carbon_intensity_history:
-  #   cmd: |
-  #     curl 'https://api.electricitymap.org/v3/carbon-intensity/history?zone=US-NE-ISNE' -H 'auth-token: TODO_INCORPORATE_SECRETS' > data/raw/carbon_intensity_history.json
-  #   outs:
-  #   - data/raw/carbon_intensity_history.json
+  unpack_gridemissions:
+    cmd: |
+      tar xvfz data/raw/gridemissions_bulk_file.tar.gz -C data/interim/ && mv data/interim/processed data/interim/gridemissions
+    outs:
+    - data/interim/gridemissions

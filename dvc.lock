@@ -7,3 +7,12 @@ stages:
       hash: md5
       md5: 57e7d3857ff51a7b00cf492dfc04b7fe
       size: 18925
+  unpack_gridemissions:
+    cmd: "tar xvfz data/raw/gridemissions_bulk_file.tar.gz -C data/interim/ && mv
+      data/interim/processed data/interim/gridemissions\n"
+    outs:
+    - path: data/interim/gridemissions
+      hash: md5
+      md5: 43c7805202a1ea8327a38b36096c76d8.dir
+      size: 4440882182
+      nfiles: 109

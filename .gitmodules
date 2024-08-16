@@ -1,0 +1,3 @@
+[submodule "libs/gridemissions"]
+	path = libs/gridemissions
+	url = git@github.com:jdechalendar/gridemissions.git
