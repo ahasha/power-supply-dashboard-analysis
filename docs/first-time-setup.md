@@ -23,6 +23,21 @@ eval "\$(pyenv init -)"
 eval "\$(pyenv virtualenv-init -)"
 ```
 
+For bash (.bash_profile), add this instead, updating the Python.framework line too:
+
+```bash
+# Setting PATH for Python 3.12
+# The original version is saved in .bash_profile.pysave
+export PATH=/Library/Frameworks/Python.framework/Versions/3.12/bin:$PATH
+#export PATH
+
+export PYENV_ROOT=$HOME/.pyenv
+command -v pyenv >/dev/null || export PATH=$PYENV_ROOT/bin:$PATH
+#export PATH=$PYENV_ROOT/bin:$PATH
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+```
+
 If you've been using conda, and it's configured to automatically activate your base conda enviornment on login, you'll likely want to turn this off by running
 
 ```bash
