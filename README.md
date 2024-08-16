@@ -6,7 +6,7 @@ Personalized dashboard providing location-based insight into carbon emissions in
 
 Requires python 3.12 and [poetry](https://python-poetry.org/docs/#installation) to be installed.
 
-Create `secrets.toml` in `power_dashboard/.streamlit/` as follows:
+Create `secrets.toml` in `power_dashboard/.streamlit/` as follows (if "power_dashboard" is your git clone root):
 
 ```
 [electricitymaps]
