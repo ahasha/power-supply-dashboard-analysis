@@ -8,3 +8,8 @@ stages:
       tar xvfz data/raw/gridemissions_bulk_file.tar.gz -C data/interim/ && mv data/interim/processed data/interim/gridemissions
     outs:
     - data/interim/gridemissions
+  get_recent_gridemissions_from_api:
+    cmd: |
+      curl "https://api.gridemissions.com/data?dataset=elec&start=20240615&end=20240817" > data/raw/recent_grid_emissions.csv
+    outs:
+    - data/raw/recent_grid_emissions.csv

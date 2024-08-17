@@ -43,6 +43,11 @@ supabase = "^2.6.0"
 gridemissions = {path = "libs/gridemissions", develop = true, extras=["all"]}
 seaborn = "^0.13.2"
 greenbutton = {git = "https://github.com/GreenButtonAlliance/greenbutton-python.git"}
+psycopg2 = "^2.9.9"
+statsforecast = "^1.7.6"
+datasetsforecast = "^0.0.8"
+lightgbm = "^4.5.0"
+mlforecast = "^0.13.3"
 
 
 [tool.poetry.group.dev.dependencies]

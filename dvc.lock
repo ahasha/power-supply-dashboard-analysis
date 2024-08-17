@@ -16,3 +16,11 @@ stages:
       md5: 43c7805202a1ea8327a38b36096c76d8.dir
       size: 4440882182
       nfiles: 109
+  get_recent_gridemissions_from_api:
+    cmd: "curl \"https://api.gridemissions.com/data?dataset=elec&start=20240615&end=20240817\"\
+      \ > data/raw/recent_grid_emissions.csv\n"
+    outs:
+    - path: data/raw/recent_grid_emissions.csv
+      hash: md5
+      md5: e5e3668dfbfd2956058069e05442333b
+      size: 5052740

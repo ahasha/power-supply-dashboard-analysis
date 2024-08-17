@@ -1,0 +1,7 @@
+outs:
+- md5: 79f5ef242a2dbe258538725a898ecd00.dir
+  size: 73268018
+  nfiles: 10
+  hash: md5
+  path: ge_make_dataset
+  desc: "Manually generated using analyze_history.ipynb notebook"
