@@ -14,7 +14,7 @@ cookiecutter template are already included below.
 This project uses [poetry](https://python-poetry.org/docs/) to recreate an identical analytical software environment on each developer's machine.  To bootstrap this environment, you will need an existing installation of
 
 * Python version 3.12
-* Poetry v1.40+
+* Poetry v1.40+ (note: the poetry install from first-time-setup.md installed v1.8.3 for Todd, which seems to work)
 
 These can be installed using whatever tool you generally use for managing your Python environment, such as `conda` or `vitualenv`. Poetry will run from this parent environment and create an independent, reproducible python environment for running the model development code.
 
