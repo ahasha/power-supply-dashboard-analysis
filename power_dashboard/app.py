@@ -144,7 +144,7 @@ def convert_hour_to_string(hour):
 
 @st.cache_data
 def load_forecast_model():
-    return MLForecast.load("../models/final_model")
+    return MLForecast.load("models/final_model")
 
 
 zones = get_zones()
