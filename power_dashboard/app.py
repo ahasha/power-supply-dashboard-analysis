@@ -94,8 +94,11 @@ def get_gridemissions_history(region: str) -> pd.DataFrame:
         .eq("region", region)
         .execute()
     )
-    df = pd.DataFrame.from_records(response.data).set_index("id")
-    return df
+    try:
+        df = pd.DataFrame.from_records(response.data).set_index("id")
+        return df
+    except KeyError:
+        return pd.DataFrame()
 
 
 # Cut down gmaps API costs by cacheing results.
@@ -261,6 +264,13 @@ with st.spinner("Updating..."):
         ba_str = result["zone"].split("-")[-1]
         region = f"CO2i_{ba_str}_D"
         df = get_gridemissions_history(region)
+
+        if len(df) == 0:
+            st.write(
+                "Grid Emissions History and Forecasts are not available for this region."
+            )
+            st.stop()
+
         df["local_time"] = pd.to_datetime(df.period).dt.tz_convert(timezone_str)
         df["rolling_avg_intensity"] = df["co2_intensity"].rolling(window=4).mean()
         start_time_by_day = df.groupby(df.local_time.dt.date).apply(
