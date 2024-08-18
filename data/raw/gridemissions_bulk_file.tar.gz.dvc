@@ -1,0 +1,12 @@
+md5: c0e8daa0cc5a823b52dc79351d448832
+frozen: true
+deps:
+- checksum: '"c2b0659bb77420f53aa3f1780e10349b-177"'
+  size: 1478764717
+  hash: md5
+  path: https://gridemissions.s3.us-east-2.amazonaws.com/processed.tar.gz
+outs:
+- md5: 90541c0897155342d5d22efa0b5e1105
+  size: 1478764717
+  hash: md5
+  path: gridemissions_bulk_file.tar.gz

@@ -7,3 +7,37 @@ stages:
       hash: md5
       md5: 57e7d3857ff51a7b00cf492dfc04b7fe
       size: 18925
+  unpack_gridemissions:
+    cmd: "tar xvfz data/raw/gridemissions_bulk_file.tar.gz -C data/interim/ && mv
+      data/interim/processed data/interim/gridemissions\n"
+    outs:
+    - path: data/interim/gridemissions
+      hash: md5
+      md5: 43c7805202a1ea8327a38b36096c76d8.dir
+      size: 4440882182
+      nfiles: 109
+  get_recent_gridemissions_from_api:
+    cmd: "curl \"https://api.gridemissions.com/data?dataset=elec&start=20240615&end=20240817\"\
+      \ > data/raw/recent_grid_emissions.csv\n"
+    outs:
+    - path: data/raw/recent_grid_emissions.csv
+      hash: md5
+      md5: e5e3668dfbfd2956058069e05442333b
+      size: 5052740
+  load_gridemissions_history:
+    cmd: python power_dashboard/load_grid_emissions_history.py
+    deps:
+    - path: data/interim/gridemissions
+      hash: md5
+      md5: 43c7805202a1ea8327a38b36096c76d8.dir
+      size: 4440882182
+      nfiles: 109
+    outs:
+    - path: data/processed/gridemissions_ts.csv
+      hash: md5
+      md5: 2b6e1cf68df9d840df3d81e071b1b788
+      size: 235216859
+    - path: pipeline_logs/load_grid_emissions_history.log
+      hash: md5
+      md5: dfb08a4f76d3db3e4161c12eb00ca97d
+      size: 234
