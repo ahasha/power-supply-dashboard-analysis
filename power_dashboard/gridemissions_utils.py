@@ -4,6 +4,11 @@ from typing import Union
 import gridemissions as ge
 import pandas as pd
 
+TIMEZONE_MAP = {
+    "CO2i_ISNE_D": "America/New_York",
+    "CO2i_WACM_D": "America/Denver",
+}
+
 
 def load_bulk(path: Union[str, Path], which: str = "elec") -> ge.GraphData:
     if isinstance(path, str):

@@ -8,8 +8,10 @@ stages:
       tar xvfz data/raw/gridemissions_bulk_file.tar.gz -C data/interim/ && mv data/interim/processed data/interim/gridemissions
     outs:
     - data/interim/gridemissions
-  get_recent_gridemissions_from_api:
-    cmd: |
-      curl "https://api.gridemissions.com/data?dataset=elec&start=20240615&end=20240817" > data/raw/recent_grid_emissions.csv
+  load_gridemissions_history:
+    cmd: python power_dashboard/load_grid_emissions_history.py
+    deps:
+    - data/interim/gridemissions
     outs:
-    - data/raw/recent_grid_emissions.csv
+    - data/processed/gridemissions_ts.csv
+    - pipeline_logs/load_grid_emissions_history.log

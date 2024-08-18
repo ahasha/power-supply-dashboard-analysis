@@ -10,6 +10,7 @@ DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 def configure_logging(log_file="pipeline.log"):
     # Get root logger
     root_logger = logging.getLogger()
+    root_logger.setLevel(logging.DEBUG)
 
     if root_logger.hasHandlers():
         root_logger.handlers.clear()

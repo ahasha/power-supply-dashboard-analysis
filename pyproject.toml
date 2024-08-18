@@ -48,6 +48,7 @@ statsforecast = "^1.7.6"
 datasetsforecast = "^0.0.8"
 lightgbm = "^4.5.0"
 mlforecast = "^0.13.3"
+pyarrow = "^17.0.0"
 
 
 [tool.poetry.group.dev.dependencies]
