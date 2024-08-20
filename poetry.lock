@@ -1362,13 +1362,13 @@ pgp = ["gpg"]
 
 [[package]]
 name = "dvc"
-version = "3.54.0"
+version = "3.54.1"
 description = "Git for data scientists - manage your code and data together"
 optional = false
 python-versions = ">=3.9"
 files = [
-    {file = "dvc-3.54.0-py3-none-any.whl", hash = "sha256:1c7bb2101fd60ce0f8ab5c4e02a1391f21b14810c887362f2aede3bee8ac7fbb"},
-    {file = "dvc-3.54.0.tar.gz", hash = "sha256:ea671fdd6ce584ba8a435d96a272bebc8400a926da6e136244437386b4578f18"},
+    {file = "dvc-3.54.1-py3-none-any.whl", hash = "sha256:9534ddfdde9cec654f44ae4a565fdbbf45d1f4b656d6d68ffb18bcef7a075db5"},
+    {file = "dvc-3.54.1.tar.gz", hash = "sha256:00cbfd2dc1268af7bd8739c8e2dfdc493134d243bfc9687579a94a2646d438ef"},
 ]
 
 [package.dependencies]
@@ -2317,7 +2317,7 @@ develop = false
 type = "git"
 url = "https://github.com/tkamin/greenbutton-python.git"
 reference = "HEAD"
-resolved_reference = "34fe61c989f65f7dad864e709deab21da53a4bad"
+resolved_reference = "37e860eba158846f3814db5e10a8ade3c7c99b7a"
 
 [[package]]
 name = "greenlet"
@@ -3746,17 +3746,19 @@ testing-docutils = ["pygments", "pytest (>=7,<8)", "pytest-param-files (>=0.3.4,
 
 [[package]]
 name = "narwhals"
-version = "1.4.2"
+version = "1.5.0"
 description = "Extremely lightweight compatibility layer between dataframe libraries"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "narwhals-1.4.2-py3-none-any.whl", hash = "sha256:cee6bb1255f63aa5ea9e268fcda58cb293235494c1dc7eb327d4beb253eaaebf"},
-    {file = "narwhals-1.4.2.tar.gz", hash = "sha256:b33348b1d187208227f404f1808713f434e401951b780a34719e4eade1fa5df5"},
+    {file = "narwhals-1.5.0-py3-none-any.whl", hash = "sha256:6b63e4e3fd494fc201395e0f3c86cef32f4970f73fb15d5502a15d479f848023"},
+    {file = "narwhals-1.5.0.tar.gz", hash = "sha256:88c5cb329d7350c4cd688188068636f8fef5b385b31377b33d92a00ebd8d951b"},
 ]
 
 [package.extras]
+cudf = ["cudf (>=23.08.00)"]
 dask = ["dask[dataframe] (>=2024.7)"]
+modin = ["modin"]
 pandas = ["pandas (>=0.25.3)"]
 polars = ["polars (>=0.20.3)"]
 pyarrow = ["pyarrow (>=11.0.0)"]

@@ -14,7 +14,6 @@ from timezonefinder import TimezoneFinder
 from io import StringIO
 
 from greenbutton import parse
-from greenbutton.resources import *
 
 from power_dashboard.electricity_maps import (
     get_electricity_maps_carbon_intensity,
@@ -351,6 +350,30 @@ with st.spinner("Updating..."):
         if uploaded_file is not None:
             stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
             string_data = stringio.read()
-            ups = parse.parse_feed(string_data)
-            st.write(string_data)
+            usage_points = parse.parse_str(string_data)
+            personal_data_list = []
+            for up in usage_points:
+                #print('UsagePoint (%s) %s %s:' % (up.title, up.serviceCategory.name, up.status))
+                for mr in up.meterReadings:
+                    #print('  Meter Reading (%s) %s:' % (mr.title, mr.readingType.uom.name))
+                    for ir in mr.intervalReadings:
+                        personal_data_list.append([ir.timePeriod.start, ir.timePeriod.duration, ir.value, ir.value_symbol])
+                        #print('    %s, %s: %s %s' % (ir.timePeriod.start, ir.timePeriod.duration, ir.value, ir.value_symbol))
 
+
+            personal_df = pd.DataFrame(personal_data_list, columns=['Time Period Start', 'Time Period Duration', 'Amount', 'Amount Symbol'])
+            st.dataframe(personal_df)
+
+            start_datetime = personal_df['Time Period Start'].iloc[0]
+            end_datetime = personal_df['Time Period Start'].iloc[-1]
+
+            #pd.to_datetime(carbon_intensity_df["datetime"]).dt.tz_convert(
+            #    "UTC"
+            #)
+
+
+            LOCAL_BALANCING_AUTHORITY = result["zone"].split('-')[-1]
+            st.text(LOCAL_BALANCING_AUTHORITY)
+            st.text(start_datetime.isoformat())
+            st.text(end_datetime.isoformat())
+            st.text(personal_df.dtypes)
