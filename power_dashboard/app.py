@@ -11,6 +11,9 @@ import streamlit as st
 from mlforecast import MLForecast
 from supabase import Client, create_client
 from timezonefinder import TimezoneFinder
+from io import StringIO
+
+from greenbutton import parse
 
 from power_dashboard.electricity_maps import (
     get_electricity_maps_carbon_intensity,
@@ -22,7 +25,7 @@ st.set_page_config(
     page_title="Clean Electricity Dashboard", layout="wide", page_icon=":thunderbolt:"
 )
 
-tab1, tab2 = st.tabs(["Now", "Forecast"])
+tab1, tab2, tab3 = st.tabs(["Now", "Forecast", "Personal"])
 
 gmaps = googlemaps.Client(key=st.secrets["googlemaps"]["api_key"])
 tf = TimezoneFinder()
@@ -339,3 +342,14 @@ with st.spinner("Updating..."):
         ax.set_ylabel("Carbon Intensity (gCO2eq/kWh)")
         fig.autofmt_xdate()
         st.pyplot(fig)
+
+    with tab3:
+        st.title("Personal CO2 Calculator from Green Button XML File")
+
+        uploaded_file = st.file_uploader("Choose a Green Button XML file")
+        if uploaded_file is not None:
+            stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
+            string_data = stringio.read()
+            ups = parse.parse_feed(string_data)
+            #st.write(string_data)
+

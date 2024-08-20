@@ -41,7 +41,7 @@ googlemaps = "^4.10.0"
 timezonefinder = "^6.5.2"
 supabase = "^2.6.0"
 seaborn = "^0.13.2"
-greenbutton = {git = "https://github.com/GreenButtonAlliance/greenbutton-python.git"}
+greenbutton = {git = "https://github.com/tkamin/greenbutton-python.git"}
 psycopg2-binary = "^2.9.9"
 statsforecast = "^1.7.6"
 datasetsforecast = "^0.0.8"
