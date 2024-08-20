@@ -13,7 +13,8 @@ from supabase import Client, create_client
 from timezonefinder import TimezoneFinder
 from io import StringIO
 
-#from greenbutton import parse
+from greenbutton import parse
+from greenbutton.resources import *
 
 from power_dashboard.electricity_maps import (
     get_electricity_maps_carbon_intensity,
@@ -350,6 +351,6 @@ with st.spinner("Updating..."):
         if uploaded_file is not None:
             stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
             string_data = stringio.read()
-            #ups = parse.parse_feed(string_data)
+            ups = parse.parse_feed(string_data)
             st.write(string_data)
 
