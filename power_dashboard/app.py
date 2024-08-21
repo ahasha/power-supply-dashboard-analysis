@@ -21,11 +21,13 @@ from power_dashboard.electricity_maps import (
     get_electricity_maps_zones,
 )
 
+from power_dashboard.eia_api import *
+
 st.set_page_config(
     page_title="Clean Electricity Dashboard", layout="wide", page_icon=":thunderbolt:"
 )
 
-tab1, tab2, tab3 = st.tabs(["Now", "Forecast", "Personal"])
+tab1, tab2, tab3 = st.tabs(["Now", "Forecast", "Personal Footprint"])
 
 gmaps = googlemaps.Client(key=st.secrets["googlemaps"]["api_key"])
 tf = TimezoneFinder()
@@ -361,19 +363,29 @@ with st.spinner("Updating..."):
                         #print('    %s, %s: %s %s' % (ir.timePeriod.start, ir.timePeriod.duration, ir.value, ir.value_symbol))
 
 
-            personal_df = pd.DataFrame(personal_data_list, columns=['Time Period Start', 'Time Period Duration', 'Amount', 'Amount Symbol'])
+            personal_df = pd.DataFrame(personal_data_list, columns=['Time Period Start', 'Time Period Duration', 'Net Usage', 'Amount Symbol'])
+            #personal_df['Time Period Start'] = pd.to_datetime(personal_df['Time Period Start'], utc=True)
+            #personal_df["timestamp"] = personal_df["Time Period Start"]
+            personal_df["timestamp"] = pd.to_datetime(personal_df["Time Period Start"]).dt.tz_convert('UTC')
             st.dataframe(personal_df)
+            #st.text(personal_df.dtypes)
 
             start_datetime = personal_df['Time Period Start'].iloc[0]
-            end_datetime = personal_df['Time Period Start'].iloc[-1]
-
-            #pd.to_datetime(carbon_intensity_df["datetime"]).dt.tz_convert(
-            #    "UTC"
-            #)
-
+            start_date = start_datetime.strftime("%Y-%m-%dT%H")
+            end_datetime = personal_df['Time Period Start'].iloc[-1] + datetime.timedelta(minutes=60) 
+            end_date = end_datetime.strftime("%Y-%m-%dT%H")
 
             LOCAL_BALANCING_AUTHORITY = result["zone"].split('-')[-1]
-            st.text(LOCAL_BALANCING_AUTHORITY)
-            st.text(start_datetime.isoformat())
-            st.text(end_datetime.isoformat())
-            st.text(personal_df.dtypes)
+            st.text(f"Balancing Authority: {LOCAL_BALANCING_AUTHORITY}")
+            st.text(start_date)
+            st.text(end_date)
+
+            personal_use_by_hour_est = get_co2_data_hourly(LOCAL_BALANCING_AUTHORITY, 
+                personal_df, 
+                start_date, 
+                end_date
+            )
+            st.dataframe(personal_use_by_hour_est)
+
+            total_for_timeframe = personal_use_by_hour_est['Net gCO2'].sum() / 1000
+            st.text(f"Total personal use for time frame: {total_for_timeframe} kgCO2") 
