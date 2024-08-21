@@ -21,7 +21,6 @@ default_start_date = (datetime.date.today() - datetime.timedelta(days=365)).isof
 
 def get_co2_data_hourly(
     local_ba,
-    personal_use_by_hour,
     start_date=default_start_date,
     end_date=default_end_date,
 ):
@@ -128,17 +127,7 @@ def get_co2_data_hourly(
     )
     #st.text(co2_kwh_est_sum.dtypes)
 
-    personal_use_by_hour_est = co2_kwh_est_sum.merge(
-        personal_use_by_hour,
-        how="left",
-        on=["timestamp"]
-        #, rsuffix=" Total",
-    )
-    personal_use_by_hour_est['Net gCO2'] = (
-        personal_use_by_hour_est["CO2/(kWh)"] * personal_use_by_hour_est["Net Usage"] / 1000
-    )
-
-    return personal_use_by_hour_est
+    return co2_kwh_est_sum
 
 # https://github.com/jdechalendar/gridemissions/blob/696838bc82c74aa40ab54206b36aec2026908a2d/src/gridemissions/emissions.py#L14-L33 
 def co2_contrib(args):
