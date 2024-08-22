@@ -1,6 +1,4 @@
 import datetime
-from datetime import datetime
-from zoneinfo import ZoneInfo
 from functools import partial
 from typing import Tuple
 
@@ -347,7 +345,7 @@ with st.spinner("Updating..."):
         st.pyplot(fig)
 
     with tab3:
-        st.title("Personal CO2 Calculator from Green Button XML File")
+        st.title("Personal CO2 Calculator")
 
         uploaded_file = st.file_uploader("Choose a Green Button XML file")
         if uploaded_file is not None:
@@ -355,60 +353,43 @@ with st.spinner("Updating..."):
             string_data = stringio.read()
             usage_points = parse.parse_str(string_data)
 
-            #cttz = datetime.datetime.now(tz=timezone_str)
-            #ctutc = datetime.datetime.now(tz='UTC')
-            #st.text(cttz)
-            #st.text(ctutc)
-
             personal_data_list = []
             for up in usage_points:
                 for mr in up.meterReadings:
                     for ir in mr.intervalReadings:
-                        #st.text(ir.timePeriod.start)
-                        new_timezone = ZoneInfo("America/Denver")
-                        #st.text(new_timezone.fromutc(ir.timePeriod.start))
-                        #st.text(ir.timePeriod.start.tzinfo)
                         personal_data_list.append([ir.timePeriod.start, ir.timePeriod.duration, ir.value, ir.value_symbol])
 
             personal_df = pd.DataFrame(personal_data_list, columns=['Time Period Start', 'Time Period Duration', 'Net Usage', 'Amount Symbol'])
             personal_df["timestamp"] = pd.to_datetime(personal_df["Time Period Start"]).dt.tz_convert(timezone_str)
-            #personal_df.timestamp.dt.tz_convert(timezone_str)
-            #personal_df["timestamp"] = pd.to_datetime(personal_df["timestamp"]).dt.tz_convert(None)
-            st.dataframe(personal_df)
-            start_datetime = personal_df['Time Period Start'].iloc[0]
-            start_date = start_datetime.tz_convert(timezone_str).strftime("%Y-%m-%dT%H")
-            end_datetime = personal_df['Time Period Start'].iloc[-1] + datetime.timedelta(minutes=60) 
-            end_date = end_datetime.tz_convert(timezone_str).strftime("%Y-%m-%dT%H")
+            start_date = personal_df['Time Period Start'].iloc[0].strftime("%Y-%m-%d")
+            end_date = personal_df['Time Period Start'].iloc[-1] + datetime.timedelta(days=1) 
+            end_date = end_date.strftime("%Y-%m-%d")
 
             LOCAL_BALANCING_AUTHORITY = result["zone"].split('-')[-1]
-            st.text(f"Balancing Authority: {LOCAL_BALANCING_AUTHORITY}, Start Date {start_date}, End Date {end_date}")
 
             co2_kwh_est_sum = get_co2_data_hourly(
                 LOCAL_BALANCING_AUTHORITY, 
                 start_date, 
                 end_date,
             )
-            #st.text(co2_kwh_est_sum.dtypes)            
-            #st.text(personal_df.dtypes)            
 
             personal_use_by_hour_est = co2_kwh_est_sum.merge(
                 personal_df,
                 how="left",
                 on=["timestamp"]
-                #, rsuffix=" Total",
             )
-            personal_use_by_hour_est['Net gCO2'] = (
+            personal_use_by_hour_est['Net gCO2e'] = (
                 personal_use_by_hour_est["CO2/(kWh)"] * personal_use_by_hour_est["Net Usage"] / 1000
             )
-            st.dataframe(personal_use_by_hour_est)
+            personal_use_by_hour_est = personal_use_by_hour_est[~personal_use_by_hour_est['Net gCO2e'].isnull()]
 
-            total_for_timeframe = personal_use_by_hour_est['Net gCO2'].sum() / 1000
-            st.text(f"Total personal use for time frame: {total_for_timeframe:.2f} kgCO2") 
+            total_for_timeframe = personal_use_by_hour_est['Net gCO2e'].sum() / 1000
+            st.subheader(f"Total personal use for time frame: {total_for_timeframe:.2f} kgCO2e") 
 
             fig_pf, pf = plt.subplots(figsize=(10, 3))
             pf.plot(
                 personal_use_by_hour_est['timestamp'],
-                personal_use_by_hour_est['Net gCO2'],
+                personal_use_by_hour_est['Net gCO2e'],
                 label="Net Carbon Produced by Hour",
             )
 
@@ -420,3 +401,12 @@ with st.spinner("Updating..."):
             st.caption(
                 "Carbon Produced by Hour Estimated"
             )
+
+            st.text("Here is your personalized hourly Net gCO2e generation: ")
+            st.dataframe(personal_use_by_hour_est)
+
+            st.text("Here's the original parsed file you uploaded: ")
+            st.dataframe(personal_df)
+
+            st.text(f"We used this info for EIA data: Balancing Authority {LOCAL_BALANCING_AUTHORITY}, Start Date {start_date}, End Date {end_date}")
+            
