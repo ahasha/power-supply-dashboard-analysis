@@ -1,6 +1,10 @@
 # power-supply-dashboard-analysis
 
-Personalized dashboard providing location-based insight into carbon emissions intensity of the grid
+Personalized dashboard providing location-based insight into carbon emissions intensity of the grid.
+
+Further components in separate repositories:
+- [Cloud Function doing data fetching and pre-processing](https://github.com/exterm/power-supply-dashboard-data-processor)
+- [IoT physical dashboard](https://github.com/exterm/software-for-climate-iot)
 
 ## Quick Start
 
